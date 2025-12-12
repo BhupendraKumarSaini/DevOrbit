@@ -53,12 +53,12 @@ const Footer = () => {
 
   return (
     <Motion.section
-  initial={{ y: 60, opacity: 0 }}
-  whileInView={{ y: 0, opacity: 1 }}
-  viewport={{ once: false, amount: 0.3 }}
-  transition={{ duration: 0.6, ease: "easeOut" }}
-  className="px-4 sm:px-6 md:px-12 lg:px-16 mt-8 pt-8 shadow-[0_-1px_4px_rgba(0,0,0,0.1)] bg-white/40 font-[Poppins]"
->
+      initial={{ y: 60, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="px-4 sm:px-6 md:px-12 lg:px-16 mt-8 pt-8 shadow-[0_-1px_4px_rgba(0,0,0,0.1)] bg-white/40 font-[Poppins]"
+    >
       <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 lg:gap-20 text-center md:text-left md:justify-between max-w-[1100px] mx-auto">
         {/* LOGO */}
         <Motion.a

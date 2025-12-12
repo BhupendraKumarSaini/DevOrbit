@@ -49,7 +49,7 @@ const Navbar = () => {
       const element = document.getElementById(id);
       if (element) {
         if (window.innerWidth < 768) {
-          element.scrollIntoView({ behavior: 'auto', block: 'start' });
+          element.scrollIntoView({ behavior: "auto", block: "start" });
         } else {
           element.scrollIntoView({ behavior: "smooth" });
         }

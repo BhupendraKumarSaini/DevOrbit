@@ -61,11 +61,7 @@ const AdminDashboard = () => {
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 
-        w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%] 
-        bg-white/80 backdrop-blur-md border border-white/20 
-        shadow-[0_2px_10px_rgba(0,0,0,0.2)] 
-        flex items-center justify-between py-4 px-5 rounded-2xl z-50"
+        className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] sm:w-[85%] md:w-[75%] lg:w-[60%] bg-white/80 backdrop-blur-md border border-white/20 shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center justify-between py-4 px-5 rounded-2xl z-50"
       >
         {/* LOGO */}
         <Motion.div
@@ -123,8 +119,7 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="absolute top-20 left-0 w-full bg-white/90 p-6 
-    rounded-2xl flex flex-col gap-4 md:hidden items-center"
+            className="absolute top-20 left-0 w-full bg-white/90 p-6 rounded-2xl flex flex-col gap-4 md:hidden items-center"
           >
             {pages.map((p) => (
               <Motion.span
@@ -147,8 +142,7 @@ const AdminDashboard = () => {
               whileHover={{ scale: 1.1, opacity: 0.9 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
-              className="flex justify-center items-center gap-2 
-      text-red-600 hover:text-red-800"
+              className="flex justify-center items-center gap-2 text-red-600 hover:text-red-800"
             >
               <LogOut size={18} />
               Logout
@@ -164,8 +158,7 @@ const AdminDashboard = () => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="w-[90%] max-w-3xl bg-white p-10 rounded-2xl 
-            shadow-lg border border-gray-200 text-center mt-55"
+            className="w-[90%] max-w-3xl bg-white p-10 rounded-2xl shadow-lg border border-gray-200 text-center mt-55"
           >
             <h2 className="text-3xl font-semibold text-gray-800">
               Welcome to Admin Dashboard 👋

@@ -83,18 +83,17 @@ const AdminLogin = () => {
           {/* Email */}
           <label className="block mb-2 font-medium text-gray-700">Email</label>
           <Motion.input
-  initial={{ opacity: 0, y: 10 }}
-  animate={{ opacity: 1, y: 0 }}
-  whileFocus={{ scale: 1.02 }}
-  transition={{ delay: 0.25, duration: 0.35 }}
-  type="email"
-  className="w-full p-3 border rounded-lg mb-5 bg-white/70 backdrop-blur-md shadow-sm focus:outline-blue-500 cursor-pointer"
-  placeholder="Enter email"
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-  required
-/>
-
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileFocus={{ scale: 1.02 }}
+            transition={{ delay: 0.25, duration: 0.35 }}
+            type="email"
+            className="w-full p-3 border rounded-lg mb-5 bg-white/70 backdrop-blur-md shadow-sm focus:outline-blue-500 cursor-pointer"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
           {/* Password */}
           <label className="block mb-2 font-medium text-gray-700">
@@ -103,31 +102,29 @@ const AdminLogin = () => {
 
           <div className="relative mb-8">
             <Motion.input
-  initial={{ opacity: 0, y: 10 }}
-  animate={{ opacity: 1, y: 0 }}
-  whileFocus={{ scale: 1.02 }}
-  transition={{ delay: 0.3, duration: 0.35 }}
-  type={showPassword ? "text" : "password"}
-  className="w-full p-3 pr-12 border rounded-lg bg-white/70 backdrop-blur-md shadow-sm focus:outline-blue-500 cursor-pointer"
-  placeholder="Enter password"
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-  required
-/>
-
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileFocus={{ scale: 1.02 }}
+              transition={{ delay: 0.3, duration: 0.35 }}
+              type={showPassword ? "text" : "password"}
+              className="w-full p-3 pr-12 border rounded-lg bg-white/70 backdrop-blur-md shadow-sm focus:outline-blue-500 cursor-pointer"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
             {/* Eye Icon */}
             <Motion.button
-  type="button"
-  onClick={() => setShowPassword(!showPassword)}
-  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
-  whileHover={{ scale: 1.2 }}
-  whileTap={{ scale: 0.9 }}
-  transition={{ type: "spring", stiffness: 300, damping: 16 }}
->
-  {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-</Motion.button>
-
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800"
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300, damping: 16 }}
+            >
+              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+            </Motion.button>
           </div>
 
           {/* ERROR MESSAGE */}
@@ -137,16 +134,15 @@ const AdminLogin = () => {
 
           {/* Login Button */}
           <Motion.button
-  type="submit"
-  disabled={loading}
-  whileHover={{ scale: 1.05, opacity: 0.92 }}
-  whileTap={{ scale: 0.96 }}
-  transition={{ type: "spring", stiffness: 300, damping: 18 }}
-  className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 shadow-[0_4px_6px_rgba(0,0,0,0.3)] disabled:opacity-50"
->
-  {loading ? "Logging in..." : "Login"}
-</Motion.button>
-
+            type="submit"
+            disabled={loading}
+            whileHover={{ scale: 1.05, opacity: 0.92 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 300, damping: 18 }}
+            className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 shadow-[0_4px_6px_rgba(0,0,0,0.3)] disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Motion.button>
         </form>
       </Motion.div>
     </div>
