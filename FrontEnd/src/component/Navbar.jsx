@@ -43,22 +43,15 @@ const Navbar = () => {
   };
 
   const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (!section) return;
-
-    section.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
+    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
     setOpen(false);
   };
 
   const navLinks = [
-    { name: "Home", action: () => scrollToSection("#home") },
-    { name: "About", action: () => scrollToSection("#about") },
-    { name: "Skills", action: () => scrollToSection("#skills") },
-    { name: "Projects", action: () => scrollToSection("#projects") },
+    { name: "Home", action: () => scrollToSection("home") },
+    { name: "About", action: () => scrollToSection("about") },
+    { name: "Skills", action: () => scrollToSection("skills") },
+    { name: "Projects", action: () => scrollToSection("projects") },
     { name: "Resume", action: handleResumeDownload },
   ];
 
@@ -88,9 +81,8 @@ const Navbar = () => {
         <div className="hidden md:flex ml-auto gap-6 lg:gap-7 text-gray-700 text-sm lg:text-base">
           {navLinks.map((link, index) => (
             <Motion.a
-              key={index}
               onClick={link.action}
-              className="cursor-pointer hover:text-blue-600"
+              className="cursor-pointer hover:text-blue-600 pointer-events-auto"
               whileHover={{ scale: 1.08, opacity: 0.85 }}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
             >
@@ -112,11 +104,8 @@ const Navbar = () => {
           <div className="absolute top-18 left-0 w-full bg-white/95 backdrop-blur-md border border-white/30  shadow-lg rounded-2xl py-6 px-5 flex flex-col items-center gap-5 text-gray-700 text-base md:hidden">
             {navLinks.map((link, index) => (
               <Motion.a
-                key={index}
                 onClick={link.action}
-                className="cursor-pointer hover:text-blue-600"
-                whileHover={{ scale: 1.08, opacity: 0.85 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                className="cursor-pointer hover:text-blue-600 pointer-events-auto"
               >
                 {link.name}
               </Motion.a>
