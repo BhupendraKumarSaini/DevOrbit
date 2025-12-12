@@ -70,15 +70,7 @@ const Hero = () => {
   };
 
   const scrollToSection = (id) => {
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const navbar = document.querySelector('nav');
-        const navbarHeight = navbar ? navbar.offsetHeight : 80;
-        const offsetTop = element.offsetTop - navbarHeight - 20; // extra padding
-        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-      }
-    }, 100);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   if (!hero) return <p className="text-center mt-20">Loading...</p>;
