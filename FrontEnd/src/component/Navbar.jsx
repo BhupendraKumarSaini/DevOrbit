@@ -45,8 +45,8 @@ const Navbar = () => {
   const scrollToSection = (id) => {
     setOpen(false);
     setTimeout(() => {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-    }, 100);
+      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300);
   };
 
   const navLinks = [

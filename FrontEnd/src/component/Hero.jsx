@@ -70,7 +70,9 @@ const Hero = () => {
   };
 
   const scrollToSection = (id) => {
-    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   };
 
   if (!hero) return <p className="text-center mt-20">Loading...</p>;
