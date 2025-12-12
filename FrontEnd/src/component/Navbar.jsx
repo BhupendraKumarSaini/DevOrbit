@@ -45,7 +45,13 @@ const Navbar = () => {
   const scrollToSection = (id) => {
     setOpen(false);
     setTimeout(() => {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+      const element = document.getElementById(id);
+      if (element) {
+        const navbar = document.querySelector('nav');
+        const navbarHeight = navbar ? navbar.offsetHeight : 80;
+        const offsetTop = element.offsetTop - navbarHeight - 20; // extra padding
+        window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+      }
     }, 300);
   };
 
