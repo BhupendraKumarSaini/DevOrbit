@@ -73,7 +73,7 @@ const Hero = () => {
     const element = document.getElementById(id);
     if (element) {
       if (window.innerWidth < 768) {
-        window.scrollTo({ top: element.offsetTop, behavior: 'auto' });
+        element.scrollIntoView({ behavior: 'auto', block: 'start' });
       } else {
         element.scrollIntoView({ behavior: "smooth" });
       }

@@ -44,16 +44,17 @@ const Navbar = () => {
 
   const scrollToSection = (id) => {
     setOpen(false);
+    const delay = window.innerWidth < 768 ? 0 : 500;
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
         if (window.innerWidth < 768) {
-          window.scrollTo({ top: element.offsetTop, behavior: 'auto' });
+          element.scrollIntoView({ behavior: 'auto', block: 'start' });
         } else {
           element.scrollIntoView({ behavior: "smooth" });
         }
       }
-    }, 500);
+    }, delay);
   };
 
   const navLinks = [
