@@ -48,7 +48,7 @@ const Navbar = () => {
       const element = document.getElementById(id);
       if (element) {
         if (window.innerWidth < 768) {
-          window.scrollTo({ top: element.offsetTop - 84, behavior: 'smooth' });
+          window.scrollTo({ top: element.offsetTop, behavior: 'auto' });
         } else {
           element.scrollIntoView({ behavior: "smooth" });
         }
