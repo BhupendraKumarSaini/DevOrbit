@@ -45,7 +45,14 @@ const Navbar = () => {
   const scrollToSection = (id) => {
     setOpen(false);
     setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      const element = document.getElementById(id);
+      if (element) {
+        if (window.innerWidth < 768) {
+          window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
     }, 500);
   };
 

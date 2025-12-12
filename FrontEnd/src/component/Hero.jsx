@@ -70,7 +70,14 @@ const Hero = () => {
   };
 
   const scrollToSection = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const element = document.getElementById(id);
+    if (element) {
+      if (window.innerWidth < 768) {
+        window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+      } else {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   };
 
   if (!hero) return <p className="text-center mt-20">Loading...</p>;
