@@ -7,6 +7,7 @@ const API = import.meta.env.VITE_API_URL;
 const Footer = () => {
   const [footer, setFooter] = useState(null);
 
+  /* FETCH FOOTER DATA FROM DB */
   useEffect(() => {
     const fetchFooter = async () => {
       try {
@@ -20,6 +21,7 @@ const Footer = () => {
     fetchFooter();
   }, []);
 
+  /* FORCE DOWNLOAD RESUME */
   const downloadResume = async () => {
     if (!footer?.resume) return;
 
@@ -51,74 +53,94 @@ const Footer = () => {
 
   return (
     <Motion.section
-      initial={{ y: 60, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: false, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="px-4 sm:px-6 md:px-12 lg:px-16 mt-8 pt-8 shadow-[0_-1px_4px_rgba(0,0,0,0.1)] bg-white/40 font-[Poppins]"
-    >
+  initial={{ y: 60, opacity: 0 }}
+  whileInView={{ y: 0, opacity: 1 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  className="px-4 sm:px-6 md:px-12 lg:px-16 mt-8 pt-8 shadow-[0_-1px_4px_rgba(0,0,0,0.1)] bg-white/40 font-[Poppins]"
+>
       <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 lg:gap-20 text-center md:text-left md:justify-between max-w-[1100px] mx-auto">
-        
-        {/* LOGO - No animation */}
-        <a
+        {/* LOGO */}
+        <Motion.a
           onClick={() => scrollToSection("home")}
-          className="flex items-center gap-2 cursor-pointer mx-auto md:mx-0"
+          className="flex items-center gap-2 cursor-pointer mx-auto md:mx-0 md:flex-none"
+          whileHover={{ scale: 1.08, opacity: 0.85 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300, damping: 18 }}
         >
           <img src="/orbit.png" alt="DevOrbit" className="w-6 h-6" />
           <h1 className="text-xl font-semibold text-black">DevOrbit</h1>
-        </a>
+        </Motion.a>
 
-        {/* NAV LINKS (No animation) */}
+        {/* NAV LINKS*/}
         <ul className="flex flex-wrap justify-center gap-3 sm:gap-5 text-gray-700 md:flex-1 md:mx-4">
           {navLinks.map((item, index) => (
-            <li key={index} className="cursor-pointer">
+            <Motion.li
+              key={index}
+              whileHover={{ scale: 1.08, opacity: 0.85 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 18 }}
+              className="cursor-pointer"
+            >
               <button
                 type="button"
                 onClick={item.action}
-                className="bg-transparent p-0 text-gray-700 hover:text-blue-600"
+                className="bg-transparent border-none p-0 text-gray-700 hover:text-blue-600"
               >
                 {item.name}
               </button>
-            </li>
+            </Motion.li>
           ))}
         </ul>
 
-        {/* SOCIAL ICONS (No animation) */}
-        <div className="flex gap-3 sm:gap-5 justify-center md:justify-end">
-          <a
+        {/* SOCIAL ICONS */}
+        <div className="flex gap-3 sm:gap-5 justify-center md:justify-end md:flex-none">
+          <Motion.a
             href={footer.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow flex items-center justify-center"
+            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow-[0_2px_10px_rgba(0,0,0,0.1)] flex items-center justify-center"
+            whileHover={{ scale: 1.15, opacity: 0.9 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 16 }}
           >
             <Github className="w-5 h-5 text-gray-700 hover:text-blue-600" />
-          </a>
+          </Motion.a>
 
-          <a
+          <Motion.a
             href={footer.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow flex items-center justify-center"
+            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow-[0_2px_10px_rgba(0,0,0,0.1)] flex items-center justify-center"
+            whileHover={{ scale: 1.15, opacity: 0.9 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 16 }}
           >
             <Linkedin className="w-5 h-5 text-gray-700 hover:text-blue-600" />
-          </a>
+          </Motion.a>
 
-          <a
+          <Motion.a
             href={`https://mail.google.com/mail/?view=cm&fs=1&to=${footer.email}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow flex items-center justify-center"
+            className="p-2 rounded-full bg-white/40 border border-white/30 hover:bg-white/70 shadow-[0_2px_10px_rgba(0,0,0,0.1)] flex items-center justify-center"
+            whileHover={{ scale: 1.15, opacity: 0.9 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 16 }}
           >
             <Mail className="w-5 h-5 text-gray-700 hover:text-blue-600" />
-          </a>
+          </Motion.a>
         </div>
       </div>
 
+      {/* DIVIDER */}
       <div className="w-full h-px bg-gray-300/40 my-8 sm:my-10"></div>
 
+      {/* COPYRIGHT */}
       <p className="text-center text-gray-600 text-xs sm:text-sm pb-8 sm:pb-10">
         © {new Date().getFullYear()}{" "}
-        <span className="font-medium">Bhupendra Saini</span>. All Rights Reserved.
+        <span className="font-medium">Bhupendra Saini</span>. All Rights
+        Reserved.
       </p>
     </Motion.section>
   );
