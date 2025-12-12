@@ -43,7 +43,14 @@ const Navbar = () => {
   };
 
   const scrollToSection = (id) => {
-    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
     setOpen(false);
   };
 
