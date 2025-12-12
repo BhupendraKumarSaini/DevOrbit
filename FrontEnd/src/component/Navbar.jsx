@@ -93,7 +93,11 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {open && (
-          <div className="absolute top-18 left-0 w-full bg-white/95 backdrop-blur-md border border-white/30 shadow-lg rounded-2xl py-6 px-5 flex flex-col items-center gap-5 text-gray-700 text-base md:hidden">
+          <div
+            className="absolute top-20 left-0 w-full bg-white/95 backdrop-blur-md 
+border border-white/30 shadow-lg rounded-2xl py-6 px-5 
+flex flex-col items-center gap-5 text-gray-700 text-base md:hidden z-50"
+          >
             {navLinks.map((link, index) => (
               <a
                 key={index}
