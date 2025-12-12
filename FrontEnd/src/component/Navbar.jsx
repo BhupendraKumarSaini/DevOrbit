@@ -55,10 +55,10 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { name: "Home", action: () => scrollToSection("home") },
-    { name: "About", action: () => scrollToSection("about") },
-    { name: "Skills", action: () => scrollToSection("skills") },
-    { name: "Projects", action: () => scrollToSection("projects") },
+    { name: "Home", action: () => scrollToSection("#home") },
+    { name: "About", action: () => scrollToSection("#about") },
+    { name: "Skills", action: () => scrollToSection("#skills") },
+    { name: "Projects", action: () => scrollToSection("#projects") },
     { name: "Resume", action: handleResumeDownload },
   ];
 
