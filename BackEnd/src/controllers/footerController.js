@@ -1,28 +1,36 @@
 import Footer from "../models/Footer.js";
 
+/* GET — Fetch Footer data */
 export const getFooter = async (req, res) => {
   try {
-    const data = await Footer.findOne();
-    res.json(data || {});
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const footer = await Footer.findOne();
+    res.json(footer || {});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
+/* POST/PUT — Create or update Footer data */
 export const saveFooter = async (req, res) => {
   try {
-    const body = req.body;
+    const data = req.body;
 
-    if (req.file) body.resume = req.file.filename;
+    if (req.file) {
+      data.resume = req.file.filename;
+    }
 
     let footer = await Footer.findOne();
-    if (!footer) footer = new Footer(body);
-    else Object.assign(footer, body);
+
+    if (!footer) {
+      footer = new Footer(data);
+    } else {
+      Object.assign(footer, data);
+    }
 
     await footer.save();
 
     res.json({ message: "Footer updated", footer });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

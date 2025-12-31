@@ -1,107 +1,120 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
+import Skeleton from "./ui/Skeleton";
+import toast from "react-hot-toast";
+import { fadeUp, scaleIn, stagger, hover, tap } from "../animation/motion";
 
 const API = import.meta.env.VITE_API_URL;
 
 const Projects = () => {
-  const [open, setOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  /* FETCH PROJECTS FROM DB */
   useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const res = await fetch(`${API}/api/projects`);
-        const data = await res.json();
-        setProjects(data);
-      } catch (err) {
-        console.log("Failed to fetch projects:", err);
-      }
-    };
-
-    loadProjects();
+    fetch(`${API}/api/projects`)
+      .then((r) => r.json())
+      .then(setProjects)
+      .catch(() => toast.error("Failed to load projects"))
+      .finally(() => setLoading(false));
   }, []);
+
+  /* LOADING */
+  if (loading) {
+    return (
+      <section className="pt-24 mb-24 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto">
+        <Skeleton className="h-12 w-40 mx-auto mb-12" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 rounded-2xl" />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
       <section
         id="projects"
-        className="pt-20 w-[95%] sm:w-[85%] md:w-[80%] lg:w-[70%] mx-auto font-[Poppins]"
+        className="pt-20 mb-24 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto font-[Poppins]"
       >
+        {/* TITLE */}
         <Motion.h1
-          initial={{ y: -40, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: false, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center text-5xl font-semibold text-black mb-10"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="text-center text-4xl sm:text-5xl font-semibold mb-8"
         >
           Projects
         </Motion.h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 hover:cursor-pointer">
-          {projects.map((project, index) => (
+        {/* GRID */}
+        <Motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.4 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-7"
+        >
+          {projects.map((project) => (
             <Motion.div
               key={project._id}
-              onClick={() => {
-                setSelectedProject(project);
-                setOpen(true);
-              }}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.1, delay: index * 0.1 }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="border border-gray-200 p-5 rounded-2xl text-gray-700 shadow-[0_2px_10px_rgba(0,0,0,0.2)] bg-white/80 hover:shadow-[0_12px_35px_rgba(0,0,0,0.15)] transition-all"
+              variants={scaleIn}
+              whileHover={hover}
+              whileTap={tap}
+              onClick={() => setSelectedProject(project)}
+              className="border border-gray-200 rounded-2xl p-5 bg-white/80 cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow"
             >
               <img
                 src={`${API}/uploads/projects/${project.thumbnail}`}
-                className="mb-4 rounded-xl p-1 w-full object-contain max-h-60"
+                alt={project.title}
+                className="rounded-xl mb-4 w-full object-contain max-h-60"
               />
 
-              <p className="text-xl text-black font-semibold mb-0">
-                {project.title}
-              </p>
+              <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
 
-              <p className="line-clamp-2 mb-3">{project.description}</p>
+              <p className="text-gray-600 line-clamp-2 mb-4">
+                {project.description}
+              </p>
 
               <Motion.a
                 href={project.link}
                 target="_blank"
+                rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="bg-blue-600 py-2 px-5 rounded-lg text-white hover:bg-blue-700 shadow-[0_4px_6px_rgba(0,0,0,0.3)] inline-block"
-                whileHover={{ scale: 1.07, opacity: 0.9 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                whileHover={hover}
+                whileTap={tap}
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
               >
                 Visit Site
               </Motion.a>
             </Motion.div>
           ))}
-        </div>
+        </Motion.div>
       </section>
 
-      {/* POPUP */}
+      {/* MODAL */}
       <AnimatePresence>
-        {open && selectedProject && (
+        {selectedProject && (
           <Motion.div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-5 font-[Poppins]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            onClick={() => setSelectedProject(null)}
           >
             <Motion.div
-              initial={{ scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.7, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="relative bg-white rounded-2xl p-6 w-[90%] sm:w-[500px] md:w-[650px] max-h-[95vh] sm:max-h-[96vh] md:max-h-[99vh] overflow-y-auto md:overflow-visible scrollbar-none"
+              variants={scaleIn}
+              className="bg-white rounded-2xl p-6 max-w-2xl w-full relative"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-4 right-4 text-xl hover:cursor-pointer"
-                onClick={() => setOpen(false)}
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 text-xl"
+                aria-label="Close"
               >
                 ✖
               </button>
@@ -109,24 +122,24 @@ const Projects = () => {
               <img
                 src={`${API}/uploads/projects/${selectedProject.thumbnail}`}
                 alt={selectedProject.title}
-                className="w-full rounded-xl mb-5 object-contain max-h-[350px]"
+                className="rounded-xl mb-4 w-full object-contain max-h-72"
               />
 
-              <h3 className="text-3xl font-semibold text-gray-900">
+              <h2 className="text-2xl font-semibold mb-2">
                 {selectedProject.title}
-              </h3>
+              </h2>
 
-              <p className="mt-3 text-gray-700 leading-relaxed">
+              <p className="text-gray-700 mb-4">
                 {selectedProject.description}
               </p>
 
               <Motion.a
                 href={selectedProject.link}
                 target="_blank"
-                className="mt-4 inline-block px-5 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-[0_4px_6px_rgba(0,0,0,0.3)]"
-                whileHover={{ scale: 1.07, opacity: 0.9 }}
-                whileTap={{ scale: 0.96 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                rel="noopener noreferrer"
+                whileHover={hover}
+                whileTap={tap}
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-7 py-2 rounded-xl"
               >
                 Visit Site
               </Motion.a>

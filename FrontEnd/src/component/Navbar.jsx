@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { motion as Motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import toast from "react-hot-toast";
+import { fadeDown, fadeUp, hover, tap } from "../animation/motion";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -8,126 +10,120 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState("");
 
-  /* fetch resume from DB */
+  /* Fetch resume once */
   useEffect(() => {
-    const fetchFooter = async () => {
-      try {
-        const res = await fetch(`${API}/api/footer`);
-        const data = await res.json();
-        setResume(data?.resume || "");
-      } catch (err) {
-        console.log("Failed to fetch resume:", err);
-      }
-    };
-    fetchFooter();
+    fetch(`${API}/api/footer`)
+      .then((r) => r.json())
+      .then((d) => setResume(d?.resume || ""))
+      .catch(() => toast.error("Failed to load resume"));
   }, []);
 
-  /* Force Resume Download */
-  const handleResumeDownload = async () => {
-    if (!resume) return;
+  /* Close on ESC */
+  useEffect(() => {
+    const esc = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
+  }, []);
 
+  const downloadResume = async () => {
+    if (!resume) return toast.error("Resume not available");
+
+    const id = toast.loading("Downloading resume...");
     try {
-      const url = `${API}/uploads/resume/${resume}`;
-      const resFile = await fetch(url);
-      const blob = await resFile.blob();
-
+      const res = await fetch(`${API}/uploads/resume/${resume}`);
+      const blob = await res.blob();
       const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "Bhupendra-Resume.pdf";
+      link.href = URL.createObjectURL(blob);
+      link.download = resume.replace(/^\d+-/, "");
       link.click();
-    } catch (err) {
-      console.log("Resume download failed:", err);
+      toast.success("Downloaded", { id });
+    } catch {
+      toast.error("Download failed", { id });
+    } finally {
+      setOpen(false);
     }
-
-    setOpen(false);
   };
 
-  const scrollToSection = (id) => {
+  const scrollTo = (id) => {
     setOpen(false);
-    const delay = window.innerWidth < 768 ? 0 : 500;
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        if (window.innerWidth < 768) {
-          element.scrollIntoView({ behavior: "auto", block: "start" });
-        } else {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    }, delay);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const navLinks = [
-    { name: "Home", action: () => scrollToSection("home") },
-    { name: "About", action: () => scrollToSection("about") },
-    { name: "Skills", action: () => scrollToSection("skills") },
-    { name: "Projects", action: () => scrollToSection("projects") },
-    { name: "Resume", action: handleResumeDownload },
+  const links = [
+    { name: "Home", action: () => scrollTo("home") },
+    { name: "About", action: () => scrollTo("about") },
+    { name: "Skills", action: () => scrollTo("skills") },
+    { name: "Projects", action: () => scrollTo("projects") },
+    { name: "Resume", action: downloadResume },
   ];
 
   return (
-    <>
-      <Motion.nav
-        initial={{ y: -50, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: false, amount: 0.4 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 flex items-center bg-white/80 backdrop-blur-md  border border-white/20 shadow-[0_2px_10px_rgba(0,0,0,0.2)] py-3 sm:py-4 px-4 sm:px-5 rounded-2xl w-[94%] sm:w-[85%] md:w-[75%] lg:w-[60%] z-50 font-[Poppins]"
+    <Motion.nav
+      variants={fadeDown}
+      initial="hidden"
+      animate="show"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] sm:w-[85%] md:w-[75%] lg:w-[60%] bg-white/80 backdrop-blur-md border border-white/20 shadow-[0_6px_20px_rgba(0,0,0,0.15)] rounded-2xl px-5 py-3 flex items-center font-[Poppins]"
+    >
+      {/* LOGO */}
+      <Motion.div
+        whileHover={hover}
+        whileTap={tap}
+        onClick={() => scrollTo("home")}
+        className="flex items-center gap-2 cursor-pointer"
       >
-        {/* Logo */}
-        <Motion.a
-          onClick={() => scrollToSection("home")}
-          className="flex items-center gap-1.5 hover:cursor-pointer"
-          whileHover={{ scale: 1.06, opacity: 0.85 }}
-          transition={{ type: "spring", stiffness: 300, damping: 18 }}
-        >
-          <img src="/orbit.png" width="23" />
-          <h1 className="text-lg sm:text-xl font-semibold text-black">
-            DevOrbit
-          </h1>
-        </Motion.a>
+        <img src="/orbit.png" width="24" alt="DevOrbit" />
+        <span className="text-xl font-semibold">DevOrbit</span>
+      </Motion.div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex ml-auto gap-6 lg:gap-7 text-gray-700 text-sm lg:text-base">
-          {navLinks.map((link, index) => (
-            <Motion.a
-              key={index}
-              onClick={link.action}
-              className="cursor-pointer hover:text-blue-600"
-              whileHover={{ scale: 1.08, opacity: 0.85 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            >
-              {link.name}
-            </Motion.a>
-          ))}
-        </div>
+      {/* DESKTOP MENU */}
+      <div className="hidden md:flex ml-auto gap-6 text-gray-700">
+        {links.map((l) => (
+          <Motion.button
+            key={l.name}
+            whileHover={hover}
+            whileTap={tap}
+            onClick={l.action}
+            className="hover:text-blue-600"
+          >
+            {l.name}
+          </Motion.button>
+        ))}
+      </div>
 
-        {/* Hamburger */}
-        <button
-          className="md:hidden ml-auto hover:cursor-pointer p-1.5 rounded-lg active:scale-95"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X size={26} /> : <Menu size={26} />}
-        </button>
+      {/* MOBILE TOGGLE */}
+      <button
+        className="md:hidden ml-auto"
+        aria-label="Toggle menu"
+        onClick={() => setOpen((p) => !p)}
+      >
+        {open ? <X size={28} /> : <Menu size={28} />}
+      </button>
 
-        {/* Mobile Menu */}
+      {/* MOBILE MENU */}
+      <AnimatePresence>
         {open && (
-          <div className="absolute top-18 left-0 w-full bg-white/95 backdrop-blur-md border border-white/30  shadow-lg rounded-2xl py-6 px-5 flex flex-col items-center gap-5 text-gray-700 text-base md:hidden">
-            {navLinks.map((link, index) => (
-              <Motion.a
-                key={index}
-                onClick={link.action}
-                className="cursor-pointer hover:text-blue-600"
-                whileHover={{ scale: 1.08, opacity: 0.85 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18 }}
+          <Motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            className="absolute top-full left-0 mt-3 w-full bg-white/95 rounded-2xl py-6 flex flex-col items-center gap-5 md:hidden"
+          >
+            {links.map((l) => (
+              <Motion.button
+                key={l.name}
+                whileHover={hover}
+                whileTap={tap}
+                onClick={l.action}
+                className="hover:text-blue-600"
               >
-                {link.name}
-              </Motion.a>
+                {l.name}
+              </Motion.button>
             ))}
-          </div>
+          </Motion.div>
         )}
-      </Motion.nav>
-    </>
+      </AnimatePresence>
+    </Motion.nav>
   );
 };
 

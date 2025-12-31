@@ -4,17 +4,17 @@ import path from "path";
 
 const uploadsPath = path.resolve("src/uploads/projects");
 
-// Get All
+/* GET — Fetch all projects */
 export const getProjects = async (req, res) => {
   try {
-    const data = await Project.find();
-    return res.json(data);
-  } catch (err) {
+    const projects = await Project.find();
+    return res.json(projects);
+  } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-// Create
+/* POST — Create a new project */
 export const createProject = async (req, res) => {
   try {
     const { title, description, link } = req.body;
@@ -27,19 +27,22 @@ export const createProject = async (req, res) => {
     });
 
     await newProject.save();
+
     return res.json({ success: true, project: newProject });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-// Update
+/* PUT — Update a project */
 export const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
 
     const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ message: "Not found" });
+    if (!project) {
+      return res.status(404).json({ message: "Not found" });
+    }
 
     const { title, description, link } = req.body;
 
@@ -49,40 +52,48 @@ export const updateProject = async (req, res) => {
 
     // If new thumbnail uploaded
     if (req.file) {
-      // remove old image
+      // Remove old image
       if (project.thumbnail) {
-        const oldPath = `${uploadsPath}/${project.thumbnail}`;
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        const oldFilePath = path.join(uploadsPath, project.thumbnail);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
       }
+
       project.thumbnail = req.file.filename;
     }
 
     await project.save();
 
     return res.json({ success: true, project });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-// Delete
+/* DELETE — Remove a project */
 export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await Project.findById(id);
 
-    if (!project) return res.status(404).json({ message: "Project not found" });
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
 
     // Delete thumbnail if exists
     if (project.thumbnail) {
-      const filePath = `${uploadsPath}/${project.thumbnail}`;
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      const filePath = path.join(uploadsPath, project.thumbnail);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     }
 
     await Project.findByIdAndDelete(id);
+
     return res.json({ success: true });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };

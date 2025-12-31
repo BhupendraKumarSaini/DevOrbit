@@ -1,16 +1,16 @@
 import About from "../models/About.js";
 
-// GET — Fetch
+/* GET — Fetch About section */
 export const getAbout = async (req, res) => {
   try {
     const about = await About.findOne();
     res.json(about || {});
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ message: "Failed to fetch about section" });
   }
 };
 
-// PUT — Update or Create
+/* PUT — Update or create About section */
 export const updateAbout = async (req, res) => {
   try {
     const { description } = req.body;
@@ -21,14 +21,14 @@ export const updateAbout = async (req, res) => {
       updateData.image = req.file.filename;
     }
 
-    const updated = await About.findOneAndUpdate({}, updateData, {
+    const updatedAbout = await About.findOneAndUpdate({}, updateData, {
       new: true,
       upsert: true,
     });
 
-    res.json(updated);
-  } catch (err) {
-    console.log(err);
+    res.json(updatedAbout);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to update about section" });
   }
 };

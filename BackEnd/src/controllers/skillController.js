@@ -1,17 +1,17 @@
 import Skill from "../models/Skill.js";
 
-/* GET ALL SKILLS */
+/* GET — Fetch all skills */
 export const getSkills = async (req, res) => {
   try {
     const skills = await Skill.find().sort({ createdAt: -1 });
     return res.json(skills);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to load skills" });
   }
 };
 
-/* ADD SKILL */
+/* POST — Add a new skill */
 export const addSkill = async (req, res) => {
   try {
     const { name, color } = req.body;
@@ -27,44 +27,47 @@ export const addSkill = async (req, res) => {
     });
 
     await skill.save();
+
     res.json({ message: "Skill added", skill });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to add skill" });
   }
 };
 
-/* UPDATE SKILL */
+/* PUT — Update a skill */
 export const updateSkill = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, color } = req.body;
 
-    let updateObj = { name, color };
+    const updateData = { name, color };
 
     if (req.file) {
-      updateObj.icon = req.file.filename;
+      updateData.icon = req.file.filename;
     }
 
-    const updated = await Skill.findByIdAndUpdate(id, updateObj, {
+    const updatedSkill = await Skill.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
-    res.json({ message: "Skill updated", updated });
-  } catch (err) {
-    console.log(err);
+    res.json({ message: "Skill updated", updated: updatedSkill });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to update skill" });
   }
 };
 
-/* DELETE SKILL */
+/* DELETE — Remove a skill */
 export const deleteSkill = async (req, res) => {
   try {
     const { id } = req.params;
+
     await Skill.findByIdAndDelete(id);
+
     res.json({ message: "Skill deleted" });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Failed to delete skill" });
   }
 };

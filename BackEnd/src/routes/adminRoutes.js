@@ -6,7 +6,7 @@ import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-/* ADMIN LOGIN */
+/* POST — Admin login */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -28,13 +28,13 @@ router.post("/login", async (req, res) => {
     );
 
     return res.json({ message: "Login successful", token });
-  } catch (err) {
-    console.log("Login error:", err);
+  } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-/* TOKEN VALIDATION ROUTE */
+/* GET — Verify JWT token */
 router.get("/verify-token", authMiddleware, (req, res) => {
   res.json({ valid: true });
 });

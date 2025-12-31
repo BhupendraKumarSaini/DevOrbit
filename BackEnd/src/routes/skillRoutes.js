@@ -9,16 +9,16 @@ import {
 
 const router = express.Router();
 
-// GET all
+/* GET — Fetch all skills */
 router.get("/", getSkills);
 
-// CREATE
+/* POST — Add a new skill */
 router.post("/", upload.single("icon"), addSkill);
 
-// UPDATE
+/* PUT — Update a skill */
 router.put("/:id", upload.single("icon"), updateSkill);
 
-// DELETE
+/* DELETE — Remove a skill */
 router.delete("/:id", deleteSkill);
 
 export default router;

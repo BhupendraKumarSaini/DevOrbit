@@ -9,16 +9,16 @@ import { uploadProjectImg } from "../middleware/uploadProjects.js";
 
 const router = express.Router();
 
-// GET
+/* GET — Fetch all projects */
 router.get("/", getProjects);
 
-// CREATE
+/* POST — Create a project */
 router.post("/", uploadProjectImg.single("thumbnail"), createProject);
 
-// UPDATE
+/* PUT — Update a project */
 router.put("/:id", uploadProjectImg.single("thumbnail"), updateProject);
 
-// DELETE
+/* DELETE — Remove a project */
 router.delete("/:id", deleteProject);
 
 export default router;

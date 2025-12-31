@@ -1,36 +1,38 @@
 import Hero from "../models/Hero.js";
 
+/* GET — Fetch Hero section */
 export const getHero = async (req, res) => {
   try {
     const hero = await Hero.findOne();
     res.json(hero || {});
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
+/* PUT — Update or create Hero section */
 export const updateHero = async (req, res) => {
   try {
     const { name, title, description } = req.body;
 
-    const update = {
+    const updateData = {
       name,
       title,
       description,
     };
 
     if (req.file) {
-      update.image = req.file.filename;
+      updateData.image = req.file.filename;
     }
 
-    const updated = await Hero.findOneAndUpdate({}, update, {
+    const updatedHero = await Hero.findOneAndUpdate({}, updateData, {
       new: true,
       upsert: true,
     });
 
-    res.json(updated);
-  } catch (err) {
-    console.error("Hero Update Error:", err);
-    res.status(500).json({ error: err.message });
+    res.json(updatedHero);
+  } catch (error) {
+    console.error("Hero Update Error:", error);
+    res.status(500).json({ error: error.message });
   }
 };

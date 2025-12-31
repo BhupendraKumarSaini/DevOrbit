@@ -4,16 +4,21 @@ import { getHero, updateHero } from "../controllers/heroController.js";
 
 const router = express.Router();
 
-// Multer Config
+/* Multer configuration for Hero image upload */
 const storage = multer.diskStorage({
   destination: "src/uploads",
-  filename: (_, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+  filename: (req, file, cb) => {
+    const uniqueFilename = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueFilename);
+  },
 });
 
 const upload = multer({ storage });
 
-// Routes
+/* GET — Fetch Hero section */
 router.get("/", getHero);
+
+/* PUT — Update Hero section */
 router.put("/", upload.single("image"), updateHero);
 
 export default router;

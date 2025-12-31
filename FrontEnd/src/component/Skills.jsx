@@ -1,74 +1,80 @@
 import React, { useEffect, useState } from "react";
 import { motion as Motion } from "framer-motion";
+import Skeleton from "./ui/Skeleton";
+import toast from "react-hot-toast";
+import { fadeUp, scaleIn, stagger, hover, tap } from "../animation/motion";
 
 const API = import.meta.env.VITE_API_URL;
 
 const Skills = () => {
   const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  /* Fetch skills from DB */
   useEffect(() => {
-    const loadSkills = async () => {
-      try {
-        const res = await fetch(`${API}/api/skills`);
-        const data = await res.json();
-        setSkills(data);
-      } catch (err) {
-        console.log("Failed to fetch skills:", err);
-      }
-    };
-
-    loadSkills();
+    fetch(`${API}/api/skills`)
+      .then((r) => r.json())
+      .then(setSkills)
+      .catch(() => toast.error("Failed to load skills"))
+      .finally(() => setLoading(false));
   }, []);
 
-  return (
-    <>
-      <section
-        id="skills"
-        className="pt-22 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto font-[Poppins]"
-      >
-        {/* Title */}
-        <Motion.h1
-          initial={{ y: -40, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: false, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center text-4xl sm:text-5xl font-semibold text-black mb-10 sm:mb-12"
-        >
-          Skills
-        </Motion.h1>
-
-        {/* Skills Grid */}
-        <Motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, amount: 0.3 }}
-          variants={{ hidden: {}, visible: {} }}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8"
-        >
-          {skills.map((skill, i) => (
-            <Motion.div
-              key={skill._id}
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              whileHover={{ y: -6, scale: 1.03 }}
-              transition={{ delay: i * 0, duration: 0 }}
-              className="border border-gray-200 py-6 sm:py-7 md:py-8 px-3 sm:px-4 rounded-2xl flex flex-col items-center justify-center 
-                text-center text-base sm:text-lg md:text-xl text-gray-700 shadow-[0_2px_10px_rgba(0,0,0,0.2)] bg-white/80 cursor-pointer hover:shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition-all"
-            >
-              <img
-                src={`${API}/uploads/${skill.icon}`}
-                className="w-10 sm:w-12 md:w-14 mb-2 border border-gray-200 rounded-xl p-2 sm:p-3"
-                style={{ filter: `drop-shadow(0 0 5px ${skill.color})` }}
-              />
-
-              <p className="mt-1 sm:mt-2">{skill.name}</p>
-            </Motion.div>
+  /* LOADING */
+  if (loading) {
+    return (
+      <section className="pt-24 mb-24 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto">
+        <Skeleton className="h-10 w-40 mx-auto mb-12" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-36 rounded-2xl" />
           ))}
-        </Motion.div>
+        </div>
       </section>
-    </>
+    );
+  }
+
+  return (
+    <section
+      id="skills"
+      className="pt-20 mb-24 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto font-[Poppins]"
+    >
+      {/* TITLE */}
+      <Motion.h1
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="text-center text-4xl sm:text-5xl font-semibold mb-8"
+      >
+        Skills
+      </Motion.h1>
+
+      {/* GRID */}
+      <Motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.4 }}
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"
+      >
+        {skills.map((skill) => (
+          <Motion.div
+            key={skill._id}
+            variants={scaleIn}
+            whileHover={hover}
+            whileTap={tap}
+            className="border border-gray-200 rounded-2xl bg-white/80 py-6 flex flex-col items-center justify-center cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-[0_14px_30px_rgba(0,0,0,0.18)] transition-shadow"
+          >
+            <img
+              src={`${API}/uploads/${skill.icon}`}
+              alt={skill.name}
+              className="w-12 mb-3 p-3 border border-gray-200 rounded-xl"
+              style={{ filter: `drop-shadow(0 0 6px ${skill.color})` }}
+            />
+            <p className="text-gray-700 text-lg font-medium">{skill.name}</p>
+          </Motion.div>
+        ))}
+      </Motion.div>
+    </section>
   );
 };
 
