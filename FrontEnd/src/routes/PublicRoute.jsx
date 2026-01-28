@@ -7,7 +7,6 @@ const PublicRoute = ({ children }) => {
 
   if (loading) return null;
 
-  // If already logged in → go to dashboard
   if (isAuthenticated) {
     return <Navigate to="/admin-dashboard" replace />;
   }
@@ -16,4 +15,3 @@ const PublicRoute = ({ children }) => {
 };
 
 export default PublicRoute;
-

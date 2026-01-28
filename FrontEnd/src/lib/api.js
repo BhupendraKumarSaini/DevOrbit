@@ -22,8 +22,8 @@ export const apiFetch = async (endpoint, options = {}) => {
   if (res.status === 401) {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("dashboardPage");
-    window.location.href = "/admin-login";
-    throw new Error("Session expired. Please login again.");
+
+    throw new Error("Unauthorized");
   }
 
   /* Parse response safely */

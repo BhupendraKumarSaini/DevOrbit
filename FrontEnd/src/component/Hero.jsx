@@ -40,7 +40,10 @@ const Hero = () => {
 
   if (!hero) {
     return (
-      <section className="min-h-screen flex justify-center items-center">
+      <section
+        id="home"
+        className="min-h-screen flex justify-center items-center"
+      >
         <Skeleton className="w-80 h-80 rounded-2xl" />
       </section>
     );

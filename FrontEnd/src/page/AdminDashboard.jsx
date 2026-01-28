@@ -51,7 +51,8 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate(-2);
+    localStorage.removeItem("dashboardPage");
+    navigate("/", { replace: true });
   };
 
   return (

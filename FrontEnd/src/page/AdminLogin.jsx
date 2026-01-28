@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion as Motion } from "framer-motion";
@@ -15,6 +15,13 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { isAuthenticated } = useAdminAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin-dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,7 +36,7 @@ const AdminLogin = () => {
       });
 
       login(data.token);
-      navigate("/admin-dashboard");
+      navigate("/admin-dashboard", { replace: true });
     } catch (err) {
       setErrorMsg(err.message || "Invalid credentials");
     } finally {

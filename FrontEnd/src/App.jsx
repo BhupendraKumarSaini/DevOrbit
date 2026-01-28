@@ -15,8 +15,19 @@ import AdminLogin from "./page/AdminLogin";
 import AdminDashboard from "./page/AdminDashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Normalize first public load
+    if (location.pathname === "/") {
+      navigate("/", { replace: true });
+    }
+  }, []);
   return (
     <Routes>
       {/* PUBLIC WEBSITE */}
